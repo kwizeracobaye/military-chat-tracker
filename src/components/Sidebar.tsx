@@ -11,9 +11,13 @@ import {
   Settings, 
   HelpCircle,
   Clock,
-  Activity
+  Activity,
+  Target,
+  Navigation
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useNavigation } from '@/contexts/NavigationContext';
+import { Button } from "@/components/ui/button";
 
 type SidebarItemProps = {
   icon: React.ReactNode;
@@ -46,6 +50,8 @@ const SidebarItem = ({ icon, label, active, hasNotification, onClick }: SidebarI
 );
 
 export function Sidebar() {
+  const { activeSideItem, setActiveSideItem } = useNavigation();
+  
   return (
     <aside className="hidden lg:block fixed inset-y-0 left-0 w-64 z-30 border-r bg-card">
       <div className="flex flex-col h-full py-6">
@@ -65,11 +71,35 @@ export function Sidebar() {
         </div>
         
         <nav className="flex-1 px-2 space-y-1">
-          <SidebarItem icon={<Map size={18} />} label="Map Overview" active />
-          <SidebarItem icon={<Radio size={18} />} label="Communications" />
-          <SidebarItem icon={<Users size={18} />} label="Personnel" hasNotification />
-          <SidebarItem icon={<BarChart3 size={18} />} label="Analytics" />
-          <SidebarItem icon={<Shield size={18} />} label="Security" />
+          <SidebarItem 
+            icon={<Map size={18} />} 
+            label="Map Overview" 
+            active={activeSideItem === 'mission'} 
+            onClick={() => setActiveSideItem('mission')}
+          />
+          <SidebarItem 
+            icon={<Radio size={18} />} 
+            label="Communications" 
+            active={activeSideItem === 'communications'} 
+            onClick={() => setActiveSideItem('communications')}
+          />
+          <SidebarItem 
+            icon={<Users size={18} />} 
+            label="Personnel" 
+            hasNotification 
+            active={activeSideItem === 'personnel'} 
+            onClick={() => setActiveSideItem('personnel')}
+          />
+          <SidebarItem 
+            icon={<BarChart3 size={18} />} 
+            label="Analytics" 
+            active={activeSideItem === 'analytics'} 
+            onClick={() => setActiveSideItem('analytics')}
+          />
+          <SidebarItem 
+            icon={<Shield size={18} />} 
+            label="Security" 
+          />
         </nav>
         
         <div className="px-3 mb-2 mt-6">
@@ -79,9 +109,25 @@ export function Sidebar() {
         </div>
         
         <nav className="px-2 space-y-1 mb-6">
-          <SidebarItem icon={<Activity size={18} />} label="Mission Status" hasNotification />
-          <SidebarItem icon={<Clock size={18} />} label="Schedule" />
-          <SidebarItem icon={<MessageSquare size={18} />} label="Messages" />
+          <SidebarItem 
+            icon={<Activity size={18} />} 
+            label="Mission Status" 
+            hasNotification 
+            active={activeSideItem === 'mission'} 
+            onClick={() => setActiveSideItem('mission')}
+          />
+          <SidebarItem 
+            icon={<Clock size={18} />} 
+            label="Schedule" 
+            active={activeSideItem === 'schedule'} 
+            onClick={() => setActiveSideItem('schedule')}
+          />
+          <SidebarItem 
+            icon={<MessageSquare size={18} />} 
+            label="Messages" 
+            active={activeSideItem === 'messages'} 
+            onClick={() => setActiveSideItem('messages')}
+          />
         </nav>
         
         <div className="px-3 pt-4 mt-auto border-t">

@@ -1,16 +1,18 @@
 
 import React, { useState, useEffect } from 'react';
-import { Bell, Menu, Search, X } from 'lucide-react';
+import { Bell, Menu, Search, X, MapPin, Shield, Users, Briefcase, Brain } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigation } from '@/contexts/NavigationContext';
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { toast } = useToast();
+  const { activeMainItem, setActiveMainItem } = useNavigation();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -28,6 +30,14 @@ export function Header() {
       duration: 3000,
     });
   };
+
+  const mainMenuItems = [
+    { id: 'map', label: 'Dashboard', icon: MapPin },
+    { id: 'units', label: 'Units', icon: Users },
+    { id: 'operations', label: 'Operations', icon: Briefcase },
+    { id: 'intelligence', label: 'Intelligence', icon: Brain },
+    { id: 'settings', label: 'Settings', icon: Shield }
+  ];
   
   return (
     <header className={cn(
@@ -58,10 +68,18 @@ export function Header() {
             mobileMenuOpen ? "block animate-fade-in" : "hidden md:flex"
           )}>
             <ul className="flex flex-col md:flex-row items-start md:items-center px-4 py-2 md:p-0">
-              {['Dashboard', 'Units', 'Operations', 'Intelligence', 'Settings'].map((item) => (
-                <li key={item}>
-                  <Button variant="ghost" className="text-sm md:text-base whitespace-nowrap">
-                    {item}
+              {mainMenuItems.map((item) => (
+                <li key={item.id}>
+                  <Button 
+                    variant={activeMainItem === item.id ? "default" : "ghost"} 
+                    className={cn(
+                      "text-sm md:text-base whitespace-nowrap",
+                      activeMainItem === item.id && "bg-primary/10 text-primary"
+                    )}
+                    onClick={() => setActiveMainItem(item.id as any)}
+                  >
+                    <item.icon className="mr-2 h-4 w-4" />
+                    {item.label}
                   </Button>
                 </li>
               ))}
