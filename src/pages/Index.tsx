@@ -2,7 +2,7 @@
 import React from 'react';
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
-import { LiveMap } from "@/components/LiveMap";
+import { GoogleMapComponent } from "@/components/GoogleMap";
 import { StatusSummary } from "@/components/StatusSummary";
 import { ActivityFeed } from "@/components/ActivityFeed";
 
@@ -24,7 +24,7 @@ const Index = () => {
           
           <div className="grid lg:grid-cols-4 gap-6">
             <div className="lg:col-span-3 space-y-6">
-              <LiveMap />
+              <GoogleMapComponent />
               <StatusSummary />
             </div>
             
