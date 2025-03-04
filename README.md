@@ -1,69 +1,43 @@
-# Welcome to your Lovable project
 
-## Project info
+# Military Live Tracker
 
-**URL**: https://lovable.dev/projects/8a2aba4a-252d-47ad-a1d5-6fe683b4a5b6
+A sophisticated military tracking application with real-time analytics and monitoring capabilities.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- Real-time map-based unit tracking
+- Mission status monitoring
+- Resource allocation visualization
+- Comprehensive activity feed
+- Responsive interface for command & control
 
-**Use Lovable**
+## Design Philosophy
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/8a2aba4a-252d-47ad-a1d5-6fe683b4a5b6) and start prompting.
+Built with a minimalist, functional approach inspired by the best in modern interface design. The application prioritizes:
 
-Changes made via Lovable will be committed automatically to this repo.
+- Clarity and ease of use for critical operations
+- Efficient information density and hierarchical organization
+- Smooth transitions and purposeful animations
+- High contrast visuals for different environmental conditions
 
-**Use your preferred IDE**
+## Technologies
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- React
+- TypeScript
+- Tailwind CSS
+- shadcn/ui components
+- Recharts for data visualization
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Getting Started
 
-Follow these steps:
+```bash
+# Install dependencies
+npm install
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Security Note
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/8a2aba4a-252d-47ad-a1d5-6fe683b4a5b6) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+This application is a demonstration and does not contain any actual military data or functionality.
