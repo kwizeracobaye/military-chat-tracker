@@ -1,143 +1,22 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { GoogleMap, useLoadScript, Marker, InfoWindow } from '@react-google-maps/api';
-import { 
-  Compass, 
-  Maximize2, 
-  ZoomIn, 
-  ZoomOut, 
-  X, 
-  Target, 
-  Navigation,
-  AlertTriangle 
-} from 'lucide-react';
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { cn } from '@/lib/utils';
+import { GoogleMap, Marker } from '@react-google-maps/api';
+import { AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
-// Map container styles
-const containerStyle = {
-  width: '100%',
-  height: '100%',
-  borderRadius: '0.75rem'
-};
-
-// Default center location
-const defaultCenter = {
-  lat: 35.6762,
-  lng: 139.6503
-};
-
-type UnitMarker = {
-  id: string;
-  type: 'friendly' | 'hostile' | 'unknown';
-  position: google.maps.LatLngLiteral;
-  name: string;
-  status: 'active' | 'idle' | 'moving' | 'alert';
-};
-
-type ObjectivePoint = {
-  id: string;
-  position: google.maps.LatLngLiteral;
-  name: string;
-  type: 'primary' | 'secondary' | 'extraction';
-};
-
-// Generate some random units for demo purposes
-const generateRandomUnits = (count: number, center: google.maps.LatLngLiteral): UnitMarker[] => {
-  const types: Array<UnitMarker['type']> = ['friendly', 'hostile', 'unknown'];
-  const statuses: Array<UnitMarker['status']> = ['active', 'idle', 'moving', 'alert'];
-  
-  return Array.from({ length: count }).map((_, index) => ({
-    id: `unit-${index}`,
-    type: types[Math.floor(Math.random() * types.length)],
-    position: {
-      lat: center.lat + (Math.random() - 0.5) * 0.2,
-      lng: center.lng + (Math.random() - 0.5) * 0.2
-    },
-    name: `Unit ${String.fromCharCode(65 + Math.floor(Math.random() * 26))}-${Math.floor(Math.random() * 100)}`,
-    status: statuses[Math.floor(Math.random() * statuses.length)],
-  }));
-};
-
-// Get marker icon based on unit type
-const getUnitIcon = (type: UnitMarker['type'], status: UnitMarker['status']) => {
-  const baseUrl = '/';
-  
-  // SVG icons as data URLs
-  const friendlyIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10" fill="#22c55e" fill-opacity="0.2" />
-      <circle cx="12" cy="12" r="6" fill="#22c55e" />
-    </svg>
-  `)}`;
-  
-  const hostileIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 2L4 11l2.5 8H12h5.5L20 11 12 2z" fill="#ef4444" fill-opacity="0.2" />
-      <circle cx="12" cy="14" r="4" fill="#ef4444" />
-    </svg>
-  `)}`;
-  
-  const unknownIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10" fill="#9ca3af" fill-opacity="0.2" />
-      <path d="M9 12h6" stroke="#9ca3af" stroke-width="2" />
-    </svg>
-  `)}`;
-  
-  // Return icon based on type
-  switch (type) {
-    case 'friendly':
-      return { url: friendlyIcon, scaledSize: new google.maps.Size(30, 30) };
-    case 'hostile':
-      return { url: hostileIcon, scaledSize: new google.maps.Size(30, 30) };
-    case 'unknown':
-    default:
-      return { url: unknownIcon, scaledSize: new google.maps.Size(30, 30) };
-  }
-};
-
-// Get objective icon based on type
-const getObjectiveIcon = (type: ObjectivePoint['type']) => {
-  // SVG icons as data URLs
-  const primaryIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10" fill="#eab308" fill-opacity="0.2" />
-      <circle cx="12" cy="12" r="3" fill="#eab308" />
-      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="#eab308" />
-    </svg>
-  `)}`;
-  
-  const secondaryIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10" fill="#3b82f6" fill-opacity="0.2" />
-      <circle cx="12" cy="12" r="3" fill="#3b82f6" />
-      <path d="M12 2v4M12 18v4" stroke="#3b82f6" />
-    </svg>
-  `)}`;
-  
-  const extractionIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <circle cx="12" cy="12" r="10" fill="#22c55e" fill-opacity="0.2" />
-      <path d="M12 7l-5 5h10l-5-5z" fill="#22c55e" />
-      <path d="M12 17v-5" stroke="#22c55e" />
-    </svg>
-  `)}`;
-  
-  // Return icon based on type
-  switch (type) {
-    case 'primary':
-      return { url: primaryIcon, scaledSize: new google.maps.Size(36, 36) };
-    case 'secondary':
-      return { url: secondaryIcon, scaledSize: new google.maps.Size(36, 36) };
-    case 'extraction':
-      return { url: extractionIcon, scaledSize: new google.maps.Size(36, 36) };
-    default:
-      return null;
-  }
-};
+import { UnitMarker, ObjectivePoint } from '@/types/map';
+import { 
+  containerStyle, 
+  defaultCenter, 
+  generateRandomUnits, 
+  getUnitIcon, 
+  getObjectiveIcon 
+} from '@/utils/mapUtils';
+import { MapZoomControls } from '@/components/map/MapZoomControls';
+import { MapNavigationControls } from '@/components/map/MapNavigationControls';
+import { MapActionControls } from '@/components/map/MapActionControls';
+import { ObjectiveSelector } from '@/components/map/ObjectiveSelector';
+import { UnitInfoWindow } from '@/components/map/UnitInfoWindow';
+import { useGoogleMaps } from '@/hooks/useGoogleMaps';
 
 export function GoogleMapComponent() {
   const mapRef = useRef<google.maps.Map | null>(null);
@@ -151,10 +30,7 @@ export function GoogleMapComponent() {
   const { toast } = useToast();
   
   // Load the Google Maps script
-  const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: "AIzaSyBG6uRQf8wRQXJ1VNLhkotdaZaA0lQECn8", // This is a placeholder, replace with your actual API key
-    libraries: ["places"],
-  });
+  const { isLoaded, loadError } = useGoogleMaps();
   
   const onMapLoad = useCallback((map: google.maps.Map) => {
     mapRef.current = map;
@@ -297,14 +173,8 @@ export function GoogleMapComponent() {
     }
   };
   
-  // Convert slider value to appropriate zoom level (1-20)
-  const sliderToZoom = (value: number) => {
-    return Math.round(1 + (value / 100) * 19);
-  };
-  
-  // Convert zoom level to slider value (0-100)
-  const zoomToSlider = (zoom: number) => {
-    return Math.round(((zoom - 1) / 19) * 100);
+  const toggleAddingObjective = () => {
+    setIsAddingObjective(!isAddingObjective);
   };
   
   if (loadError) {
@@ -368,141 +238,30 @@ export function GoogleMapComponent() {
         ))}
         
         {/* Info Window for selected unit */}
-        {selectedUnit && (
-          <InfoWindow
-            position={selectedUnit.position}
-            onCloseClick={() => setSelectedUnit(null)}
-          >
-            <div className="p-1">
-              <h4 className="font-medium text-sm">{selectedUnit.name}</h4>
-              <div className="flex items-center mt-1 space-x-2">
-                <span className={cn(
-                  "inline-flex items-center px-2 py-0.5 rounded-full text-xs",
-                  selectedUnit.type === 'friendly' && "bg-emerald-100 text-emerald-800",
-                  selectedUnit.type === 'hostile' && "bg-red-100 text-red-800",
-                  selectedUnit.type === 'unknown' && "bg-gray-100 text-gray-800"
-                )}>
-                  {selectedUnit.type}
-                </span>
-                <span className={cn(
-                  "inline-flex items-center px-2 py-0.5 rounded-full text-xs",
-                  selectedUnit.status === 'active' && "bg-emerald-100 text-emerald-800",
-                  selectedUnit.status === 'idle' && "bg-blue-100 text-blue-800",
-                  selectedUnit.status === 'moving' && "bg-amber-100 text-amber-800",
-                  selectedUnit.status === 'alert' && "bg-red-100 text-red-800"
-                )}>
-                  {selectedUnit.status}
-                </span>
-              </div>
-              <p className="text-xs text-gray-600 mt-2">
-                Position: {selectedUnit.position.lat.toFixed(4)}, {selectedUnit.position.lng.toFixed(4)}
-              </p>
-            </div>
-          </InfoWindow>
-        )}
+        <UnitInfoWindow 
+          selectedUnit={selectedUnit} 
+          onClose={() => setSelectedUnit(null)}
+        />
       </GoogleMap>
       
       {/* Map Controls */}
-      <div className="absolute top-4 left-4 z-10 space-y-2">
-        <Button 
-          variant="secondary" 
-          size="icon" 
-          className="h-8 w-8 rounded-full bg-background/70 backdrop-blur-sm border shadow-md"
-        >
-          <Compass size={16} />
-        </Button>
-        <Button 
-          variant="secondary" 
-          size="icon" 
-          className="h-8 w-8 rounded-full bg-background/70 backdrop-blur-sm border shadow-md"
-        >
-          <Maximize2 size={16} />
-        </Button>
-      </div>
-      
-      {/* Right Side Controls */}
-      <div className="absolute bottom-4 right-4 z-10 flex items-center gap-2">
-        <Button 
-          variant="secondary" 
-          size="icon" 
-          className="h-8 w-8 rounded-full bg-background/70 backdrop-blur-sm border shadow-md" 
-          onClick={handleZoomOut}
-        >
-          <ZoomOut size={16} />
-        </Button>
-        <div className="w-24 h-8 px-3 flex items-center bg-background/70 backdrop-blur-sm border rounded-full shadow-md">
-          <Slider 
-            value={[zoomToSlider(zoom)]} 
-            onValueChange={(val) => handleSliderChange([sliderToZoom(val[0])])} 
-            max={100} 
-            step={1} 
-            className="w-full" 
-          />
-        </div>
-        <Button 
-          variant="secondary" 
-          size="icon" 
-          className="h-8 w-8 rounded-full bg-background/70 backdrop-blur-sm border shadow-md" 
-          onClick={handleZoomIn}
-        >
-          <ZoomIn size={16} />
-        </Button>
-      </div>
-      
-      {/* Additional Controls */}
-      <div className="absolute top-4 right-4 z-10 space-y-2">
-        <Button 
-          variant={isAddingObjective ? "default" : "secondary"} 
-          size="icon" 
-          className="h-8 w-8 rounded-full bg-background/70 backdrop-blur-sm border shadow-md"
-          onClick={() => setIsAddingObjective(!isAddingObjective)}
-        >
-          <Target size={16} className={isAddingObjective ? "text-primary-foreground" : ""} />
-        </Button>
-        <Button 
-          variant="secondary" 
-          size="icon" 
-          className="h-8 w-8 rounded-full bg-background/70 backdrop-blur-sm border shadow-md"
-          onClick={handleGoToMyLocation}
-        >
-          <Navigation size={16} />
-        </Button>
-      </div>
-      
-      {/* Objective Type Selection */}
-      {isAddingObjective && (
-        <div className="absolute top-4 right-14 z-10">
-          <div className="flex flex-col gap-2 p-2 bg-background/70 backdrop-blur-sm border rounded-md shadow-md">
-            <Button
-              variant={newObjectiveType === 'primary' ? "default" : "ghost"}
-              size="sm"
-              className="justify-start"
-              onClick={() => setNewObjectiveType('primary')}
-            >
-              <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
-              Primary
-            </Button>
-            <Button
-              variant={newObjectiveType === 'secondary' ? "default" : "ghost"}
-              size="sm"
-              className="justify-start"
-              onClick={() => setNewObjectiveType('secondary')}
-            >
-              <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
-              Secondary
-            </Button>
-            <Button
-              variant={newObjectiveType === 'extraction' ? "default" : "ghost"}
-              size="sm"
-              className="justify-start"
-              onClick={() => setNewObjectiveType('extraction')}
-            >
-              <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
-              Extraction
-            </Button>
-          </div>
-        </div>
-      )}
+      <MapNavigationControls />
+      <MapZoomControls 
+        zoom={zoom} 
+        onZoomIn={handleZoomIn} 
+        onZoomOut={handleZoomOut} 
+        onSliderChange={handleSliderChange} 
+      />
+      <MapActionControls 
+        isAddingObjective={isAddingObjective} 
+        toggleAddingObjective={toggleAddingObjective}
+        onGoToMyLocation={handleGoToMyLocation}
+      />
+      <ObjectiveSelector 
+        isAddingObjective={isAddingObjective} 
+        objectiveType={newObjectiveType} 
+        onTypeSelect={setNewObjectiveType} 
+      />
     </div>
   );
 }
