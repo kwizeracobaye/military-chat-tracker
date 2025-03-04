@@ -6,7 +6,7 @@ const libraries: ("places")[] = ["places"];
 
 export const useGoogleMaps = () => {
   return useLoadScript({
-    googleMapsApiKey: "AIzaSyBG6uRQf8wRQXJ1VNLhkotdaZaA0lQECn8", // Replace with actual API key
+    googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY || "AIzaSyCYt9MUxGvuu6t7ncSYVZ0XQ_6rXIIVUQo", // Updated API key
     libraries: libraries,
   });
 };
