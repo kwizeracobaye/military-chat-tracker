@@ -52,7 +52,7 @@ const Personnel = () => {
                         <Badge variant={
                           person.status === "Active" ? "default" :
                           person.status === "Lost" ? "secondary" :
-                          person.status === "Completed" ? "success" :
+                          person.status === "Completed" ? "outline" :
                           person.status === "Emergency" ? "destructive" :
                           "outline"
                         }>

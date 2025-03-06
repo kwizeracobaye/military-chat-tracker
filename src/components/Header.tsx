@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Bell, Menu, Search, X, MapPin, Shield, Users, Briefcase, Brain } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -35,7 +34,7 @@ export function Header() {
 
   const mainMenuItems = [
     { id: 'map', label: 'Dashboard', icon: MapPin, path: '/' },
-    { id: 'units', label: 'Units', icon: Users, path: '/units' },
+    { id: 'units', label: 'Syndicates', icon: Users, path: '/units' },
     { id: 'operations', label: 'Operations', icon: Briefcase, path: '/operations' },
     { id: 'intelligence', label: 'Intelligence', icon: Brain, path: '/intelligence' },
     { id: 'settings', label: 'Settings', icon: Shield, path: '/settings' }
@@ -60,8 +59,8 @@ export function Header() {
             
             <Link to="/">
               <div className="font-medium text-lg md:text-xl">
-                <span className="font-semibold">Military</span>
-                <span className="text-muted-foreground">Track</span>
+                <span className="font-semibold">Cadet</span>
+                <span className="text-muted-foreground">Nav</span>
               </div>
             </Link>
           </div>

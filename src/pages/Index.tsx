@@ -80,7 +80,7 @@ const Index = () => {
       link: "/communications"
     },
     {
-      title: "Syndicates",
+      title: "Personnel",
       description: "View and manage cadet syndicates",
       icon: Users,
       link: "/personnel"
@@ -124,7 +124,9 @@ const Index = () => {
           </div>
           
           <div className="grid gap-6 mb-8">
-            <LiveMap className="h-[50vh] w-full rounded-lg border overflow-hidden" />
+            <div className="h-[50vh] w-full rounded-lg border overflow-hidden">
+              <LiveMap />
+            </div>
             
             <StatusSummary />
           </div>

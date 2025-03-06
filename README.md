@@ -1,15 +1,16 @@
 
-# Military Live Tracker
+# Cadet Navigation System
 
-A sophisticated military tracking application with real-time analytics and monitoring capabilities.
+A comprehensive tracking and management system for cadet field navigation exercises.
 
 ## Features
 
 - Real-time map-based unit tracking
-- Mission status monitoring
-- Resource allocation visualization
-- Comprehensive activity feed
-- Responsive interface for command & control
+- Navigation exercise status monitoring
+- Syndicate management and assignment
+- Checkpoint tracking and verification
+- Command & control communications
+- Responsive interface for instructors and coordinators
 
 ## Design Philosophy
 
@@ -18,7 +19,7 @@ Built with a minimalist, functional approach inspired by the best in modern inte
 - Clarity and ease of use for critical operations
 - Efficient information density and hierarchical organization
 - Smooth transitions and purposeful animations
-- High contrast visuals for different environmental conditions
+- High contrast visuals for field use in different environmental conditions
 
 ## Technologies
 
@@ -40,4 +41,4 @@ npm run dev
 
 ## Security Note
 
-This application is a demonstration and does not contain any actual military data or functionality.
+This application is a demonstration and does not contain any actual cadet navigation data or functionality.
