@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigation } from '@/contexts/NavigationContext';
+import { Link, useLocation } from 'react-router-dom';
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -13,6 +14,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { toast } = useToast();
   const { activeMainItem, setActiveMainItem } = useNavigation();
+  const location = useLocation();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -32,11 +34,11 @@ export function Header() {
   };
 
   const mainMenuItems = [
-    { id: 'map', label: 'Dashboard', icon: MapPin },
-    { id: 'units', label: 'Units', icon: Users },
-    { id: 'operations', label: 'Operations', icon: Briefcase },
-    { id: 'intelligence', label: 'Intelligence', icon: Brain },
-    { id: 'settings', label: 'Settings', icon: Shield }
+    { id: 'map', label: 'Dashboard', icon: MapPin, path: '/' },
+    { id: 'units', label: 'Units', icon: Users, path: '/units' },
+    { id: 'operations', label: 'Operations', icon: Briefcase, path: '/operations' },
+    { id: 'intelligence', label: 'Intelligence', icon: Brain, path: '/intelligence' },
+    { id: 'settings', label: 'Settings', icon: Shield, path: '/settings' }
   ];
   
   return (
@@ -56,10 +58,12 @@ export function Header() {
               {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </Button>
             
-            <div className="font-medium text-lg md:text-xl">
-              <span className="font-semibold">Military</span>
-              <span className="text-muted-foreground">Track</span>
-            </div>
+            <Link to="/">
+              <div className="font-medium text-lg md:text-xl">
+                <span className="font-semibold">Military</span>
+                <span className="text-muted-foreground">Track</span>
+              </div>
+            </Link>
           </div>
           
           <nav className={cn(
@@ -70,17 +74,18 @@ export function Header() {
             <ul className="flex flex-col md:flex-row items-start md:items-center px-4 py-2 md:p-0">
               {mainMenuItems.map((item) => (
                 <li key={item.id}>
-                  <Button 
-                    variant={activeMainItem === item.id ? "default" : "ghost"} 
-                    className={cn(
-                      "text-sm md:text-base whitespace-nowrap",
-                      activeMainItem === item.id && "bg-primary/10 text-primary"
-                    )}
-                    onClick={() => setActiveMainItem(item.id as any)}
-                  >
-                    <item.icon className="mr-2 h-4 w-4" />
-                    {item.label}
-                  </Button>
+                  <Link to={item.path}>
+                    <Button 
+                      variant={location.pathname === item.path ? "default" : "ghost"} 
+                      className={cn(
+                        "text-sm md:text-base whitespace-nowrap",
+                        location.pathname === item.path && "bg-primary/10 text-primary"
+                      )}
+                    >
+                      <item.icon className="mr-2 h-4 w-4" />
+                      {item.label}
+                    </Button>
+                  </Link>
                 </li>
               ))}
             </ul>
