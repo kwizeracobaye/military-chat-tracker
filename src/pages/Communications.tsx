@@ -15,7 +15,7 @@ const Communications = () => {
       <main className="pt-24 lg:pl-64 pb-6 transition-all duration-300">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Communications</h1>
+            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Command Communications</h1>
             <div className="flex items-center space-x-2 mt-2 md:mt-0">
               <span className="text-sm text-muted-foreground">Status: </span>
               <span className="text-sm font-medium text-green-500">Online</span>
@@ -25,14 +25,14 @@ const Communications = () => {
           <div className="grid lg:grid-cols-4 gap-6">
             <div className="lg:col-span-1 bg-card rounded-lg border shadow-sm">
               <div className="p-4 border-b">
-                <h2 className="font-medium">Channels</h2>
+                <h2 className="font-medium">Command Channels</h2>
               </div>
               <div className="p-2">
                 {[
-                  { name: "Command Center", unread: 3 },
-                  { name: "Field Operations", unread: 0 },
-                  { name: "Intelligence Sharing", unread: 1 },
-                  { name: "Support Team", unread: 0 },
+                  { name: "Commandant", unread: 3 },
+                  { name: "Chief Instructor", unread: 0 },
+                  { name: "Wing Commander", unread: 1 },
+                  { name: "Exercise Coordinator", unread: 0 },
                   { name: "Emergency Channel", unread: 0 }
                 ].map((channel, index) => (
                   <div 
@@ -58,8 +58,8 @@ const Communications = () => {
             <div className="lg:col-span-3 bg-card rounded-lg border shadow-sm flex flex-col">
               <div className="p-4 border-b flex items-center justify-between">
                 <div className="flex items-center">
-                  <h2 className="font-medium">Command Center</h2>
-                  <span className="ml-2 text-xs text-muted-foreground">12 members</span>
+                  <h2 className="font-medium">Commandant</h2>
+                  <span className="ml-2 text-xs text-muted-foreground">3 online</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
@@ -73,25 +73,25 @@ const Communications = () => {
               
               <div className="flex-1 p-4 overflow-auto space-y-4">
                 <div className="flex items-start space-x-2">
-                  <div className="h-8 w-8 bg-primary/10 rounded-full flex items-center justify-center text-xs font-medium">JD</div>
+                  <div className="h-8 w-8 bg-primary/10 rounded-full flex items-center justify-center text-xs font-medium">CM</div>
                   <div className="bg-accent rounded-lg p-3 max-w-[80%]">
-                    <p className="text-sm">All units, please report status for morning briefing.</p>
+                    <p className="text-sm">All syndicate leaders, please report status for navigation exercise.</p>
                     <span className="text-xs text-muted-foreground">09:15</span>
                   </div>
                 </div>
                 
                 <div className="flex items-start space-x-2">
-                  <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center text-xs font-medium">SK</div>
+                  <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center text-xs font-medium">CI</div>
                   <div className="bg-accent rounded-lg p-3 max-w-[80%]">
-                    <p className="text-sm">Unit A-1 reporting. All systems operational.</p>
+                    <p className="text-sm">Alpha syndicate has reached Checkpoint 2. All operations normal.</p>
                     <span className="text-xs text-muted-foreground">09:17</span>
                   </div>
                 </div>
                 
                 <div className="flex items-start space-x-2">
-                  <div className="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center text-xs font-medium">MT</div>
+                  <div className="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center text-xs font-medium">EC</div>
                   <div className="bg-accent rounded-lg p-3 max-w-[80%]">
-                    <p className="text-sm">Unit B-3 on standby. Ready for deployment.</p>
+                    <p className="text-sm">Bravo syndicate reporting navigation issue near the river crossing.</p>
                     <span className="text-xs text-muted-foreground">09:18</span>
                   </div>
                 </div>

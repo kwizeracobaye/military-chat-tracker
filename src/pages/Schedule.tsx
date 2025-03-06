@@ -4,7 +4,7 @@ import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, Plus, MapPin, Users, Clock, Flag } from 'lucide-react';
 
 const Schedule = () => {
   const today = new Date();
@@ -13,14 +13,14 @@ const Schedule = () => {
   
   // Sample events data
   const events = [
-    { date: 5, title: "Operation Briefing", time: "09:00", type: "meeting" },
-    { date: 8, title: "Surveillance Mission", time: "06:00", type: "operation" },
-    { date: 12, title: "Equipment Maintenance", time: "14:00", type: "maintenance" },
-    { date: 15, title: "Training Exercise", time: "10:00", type: "training" },
-    { date: 18, title: "Intelligence Sharing", time: "11:30", type: "meeting" },
-    { date: 22, title: "Supply Delivery", time: "08:00", type: "logistics" },
-    { date: 25, title: "Strategic Planning", time: "15:00", type: "meeting" },
-    { date: today.getDate(), title: "Command Center Inspection", time: "13:00", type: "inspection" },
+    { date: 5, title: "Navigation Exercise Briefing", time: "09:00", type: "briefing" },
+    { date: 8, title: "Hill Navigation Exercise", time: "06:00", type: "exercise" },
+    { date: 12, title: "Equipment Check & Prep", time: "14:00", type: "maintenance" },
+    { date: 15, title: "Night Navigation Training", time: "19:00", type: "training" },
+    { date: 18, title: "Map Reading Workshop", time: "11:30", type: "training" },
+    { date: 22, title: "Compass & Navigation Tools", time: "08:00", type: "training" },
+    { date: 25, title: "Advanced Navigation Planning", time: "15:00", type: "planning" },
+    { date: today.getDate(), title: "Final Navigation Assessment", time: "07:00", type: "assessment" },
   ];
   
   // Function to generate days of the month
@@ -60,7 +60,7 @@ const Schedule = () => {
       <main className="pt-24 lg:pl-64 pb-6 transition-all duration-300">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Schedule</h1>
+            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">Exercise Schedule</h1>
             <div className="flex items-center space-x-2 mt-2 md:mt-0">
               <Button size="sm" variant="outline">
                 <Calendar className="mr-2 h-4 w-4" />
@@ -68,7 +68,7 @@ const Schedule = () => {
               </Button>
               <Button size="sm">
                 <Plus className="mr-2 h-4 w-4" />
-                Add Event
+                Add Exercise
               </Button>
             </div>
           </div>
@@ -116,11 +116,11 @@ const Schedule = () => {
                             <div 
                               key={eventIndex} 
                               className={`text-xs p-1 rounded truncate ${
-                                event.type === 'meeting' ? 'bg-blue-100 text-blue-800' :
-                                event.type === 'operation' ? 'bg-red-100 text-red-800' :
+                                event.type === 'briefing' ? 'bg-blue-100 text-blue-800' :
+                                event.type === 'exercise' ? 'bg-red-100 text-red-800' :
                                 event.type === 'training' ? 'bg-green-100 text-green-800' :
                                 event.type === 'maintenance' ? 'bg-amber-100 text-amber-800' :
-                                event.type === 'logistics' ? 'bg-purple-100 text-purple-800' :
+                                event.type === 'assessment' ? 'bg-purple-100 text-purple-800' :
                                 'bg-gray-100 text-gray-800'
                               }`}
                             >
@@ -137,7 +137,7 @@ const Schedule = () => {
           </Card>
           
           <div className="mt-6">
-            <h2 className="text-xl font-semibold mb-4">Upcoming Events</h2>
+            <h2 className="text-xl font-semibold mb-4">Upcoming Navigation Exercises</h2>
             <div className="space-y-4">
               {events
                 .filter(event => event.date >= today.getDate())
@@ -146,11 +146,19 @@ const Schedule = () => {
                 .map((event, index) => (
                   <Card key={index}>
                     <CardContent className="p-4 flex items-center justify-between">
-                      <div>
-                        <h3 className="font-medium">{event.title}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          {monthName} {event.date}, {event.time}
-                        </p>
+                      <div className="flex items-center">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                          {event.type === 'exercise' ? <Flag className="h-5 w-5 text-primary" /> :
+                           event.type === 'training' ? <Users className="h-5 w-5 text-primary" /> :
+                           event.type === 'assessment' ? <MapPin className="h-5 w-5 text-primary" /> :
+                           <Clock className="h-5 w-5 text-primary" />}
+                        </div>
+                        <div>
+                          <h3 className="font-medium">{event.title}</h3>
+                          <p className="text-sm text-muted-foreground">
+                            {monthName} {event.date}, {event.time}
+                          </p>
+                        </div>
                       </div>
                       <Button variant="outline" size="sm">Details</Button>
                     </CardContent>

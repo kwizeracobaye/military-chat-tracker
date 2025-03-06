@@ -50,20 +50,20 @@ const NavigationCard = ({
 const Index = () => {
   const navigationItems = [
     {
-      title: "Units",
-      description: "View and manage all active military units",
+      title: "Syndicates",
+      description: "View and manage cadet syndicates in the field",
       icon: Users,
       link: "/units"
     },
     {
       title: "Operations",
-      description: "Track ongoing and planned mission operations",
+      description: "Track ongoing and planned navigation exercises",
       icon: Activity,
       link: "/operations"
     },
     {
       title: "Intelligence",
-      description: "Access intelligence reports and analysis",
+      description: "Access terrain and weather intelligence",
       icon: FileText,
       link: "/intelligence"
     },
@@ -74,38 +74,38 @@ const Index = () => {
       link: "/settings"
     },
     {
-      title: "Communications",
-      description: "Manage communications channels and messages",
+      title: "Command Communications",
+      description: "Communication with command structure",
       icon: Radio,
       link: "/communications"
     },
     {
-      title: "Personnel",
-      description: "View and manage all personnel records",
+      title: "Syndicates",
+      description: "View and manage cadet syndicates",
       icon: Users,
       link: "/personnel"
     },
     {
-      title: "Analytics",
-      description: "Access operational analytics and reports",
+      title: "Navigation Analytics",
+      description: "Access real-time exercise analytics",
       icon: BarChart3,
       link: "/analytics"
     },
     {
-      title: "Security",
-      description: "Monitor and manage security protocols",
+      title: "Safety & Security",
+      description: "Monitor safety protocols and emergencies",
       icon: Shield,
       link: "/security"
     },
     {
-      title: "Schedule",
-      description: "View and manage operational schedules",
+      title: "Exercise Schedule",
+      description: "View and manage exercise timetables",
       icon: Clock,
       link: "/schedule"
     },
     {
-      title: "Messages",
-      description: "Access communication messages and channels",
+      title: "Field Messages",
+      description: "Access communication channels with teams",
       icon: MessageSquare,
       link: "/messages"
     }
@@ -119,8 +119,8 @@ const Index = () => {
       <main className="pt-24 lg:pl-64 pb-6 transition-all duration-300">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="mb-8">
-            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight mb-2">Operations Dashboard</h1>
-            <p className="text-muted-foreground">Military operations command and control system</p>
+            <h1 className="text-2xl md:text-3xl font-semibold tracking-tight mb-2">Cadet Navigation System</h1>
+            <p className="text-muted-foreground">Command and control system for cadet field navigation exercises</p>
           </div>
           
           <div className="grid gap-6 mb-8">

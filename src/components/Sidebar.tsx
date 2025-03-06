@@ -65,13 +65,13 @@ export function Sidebar() {
             <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center text-primary-foreground mr-3">
               <Compass size={18} />
             </div>
-            <div className="font-semibold text-lg">MilitaryTrack</div>
+            <div className="font-semibold text-lg">Cadet Nav System</div>
           </div>
         </div>
         
         <div className="px-3 mb-2">
           <div className="text-xs font-medium text-muted-foreground px-3 py-1.5 uppercase tracking-wider">
-            Main
+            Command
           </div>
         </div>
         
@@ -84,13 +84,13 @@ export function Sidebar() {
           />
           <SidebarItem 
             icon={<Radio size={18} />} 
-            label="Communications" 
+            label="Command Comms" 
             active={location.pathname === '/communications'} 
             to="/communications"
           />
           <SidebarItem 
             icon={<Users size={18} />} 
-            label="Personnel" 
+            label="Syndicates" 
             hasNotification 
             active={location.pathname === '/personnel'} 
             to="/personnel"
@@ -103,7 +103,7 @@ export function Sidebar() {
           />
           <SidebarItem 
             icon={<Shield size={18} />} 
-            label="Security" 
+            label="Safety & Security" 
             active={location.pathname === '/security'} 
             to="/security"
           />
@@ -111,29 +111,35 @@ export function Sidebar() {
         
         <div className="px-3 mb-2 mt-6">
           <div className="text-xs font-medium text-muted-foreground px-3 py-1.5 uppercase tracking-wider">
-            Operations
+            Navigation
           </div>
         </div>
         
         <nav className="px-2 space-y-1 mb-6">
           <SidebarItem 
             icon={<Activity size={18} />} 
-            label="Mission Status" 
+            label="Exercise Status" 
             hasNotification 
             active={location.pathname === '/operations'} 
             to="/operations"
           />
           <SidebarItem 
             icon={<Clock size={18} />} 
-            label="Schedule" 
+            label="Exercise Schedule" 
             active={location.pathname === '/schedule'} 
             to="/schedule"
           />
           <SidebarItem 
             icon={<MessageSquare size={18} />} 
-            label="Messages" 
+            label="Field Messages" 
             active={location.pathname === '/messages'} 
             to="/messages"
+          />
+          <SidebarItem 
+            icon={<Target size={18} />} 
+            label="Checkpoints" 
+            active={location.pathname === '/units'} 
+            to="/units"
           />
         </nav>
         
