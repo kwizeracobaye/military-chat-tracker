@@ -135,10 +135,16 @@ export const reverseGeocode = async (lat: number, lng: number): Promise<Geocodin
 
 // Calculate route between two points using OSRM
 export const getRoute = async (
-  start: [number, number], 
-  end: [number, number]
+  start: [number, number] | [string, string], 
+  end: [number, number] | [string, string]
 ): Promise<any> => {
-  const cacheKey = `route_${start.join(",")}_${end.join(",")}`;
+  // Convert to string if needed
+  const startLng = typeof start[1] === 'number' ? start[1].toString() : start[1];
+  const startLat = typeof start[0] === 'number' ? start[0].toString() : start[0];
+  const endLng = typeof end[1] === 'number' ? end[1].toString() : end[1];
+  const endLat = typeof end[0] === 'number' ? end[0].toString() : end[0];
+  
+  const cacheKey = `route_${startLat},${startLng}_${endLat},${endLng}`;
   const cachedResult = geocodeCache.get(cacheKey);
   
   if (cachedResult && Date.now() - cachedResult.timestamp < CACHE_DURATION) {
@@ -147,7 +153,7 @@ export const getRoute = async (
   
   try {
     const response = await fetch(
-      `https://router.project-osrm.org/route/v1/driving/${start[1]},${start[0]};${end[1]},${end[0]}?overview=full&geometries=geojson`
+      `https://router.project-osrm.org/route/v1/driving/${startLng},${startLat};${endLng},${endLat}?overview=full&geometries=geojson`
     );
     
     if (!response.ok) {

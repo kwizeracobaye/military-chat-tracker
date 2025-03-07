@@ -186,8 +186,8 @@ const OpenStreetMap: React.FC<OpenStreetMapProps> = ({ height = '500px', classNa
         return;
       }
       
-      const startCoords = [parseFloat(startResults[0].lat), parseFloat(startResults[0].lon)];
-      const endCoords = [parseFloat(endResults[0].lat), parseFloat(endResults[0].lon)];
+      const startCoords: [number, number] = [parseFloat(startResults[0].lat), parseFloat(startResults[0].lon)];
+      const endCoords: [number, number] = [parseFloat(endResults[0].lat), parseFloat(endResults[0].lon)];
       
       // Clear previous routing
       clearRouting();
