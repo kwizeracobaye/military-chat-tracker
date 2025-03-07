@@ -16,8 +16,8 @@ const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 const geocodeCache = new Map<string, { data: any; timestamp: number }>();
 
 export type GeocodingResult = {
-  lat: number;
-  lon: number;
+  lat: string;
+  lon: string;
   display_name: string;
   place_id: number;
   importance: number;
