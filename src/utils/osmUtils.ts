@@ -44,7 +44,12 @@ export const getUserLocation = (): Promise<{ lat: number; lng: number }> => {
       },
       (error) => {
         toast.error(`Unable to retrieve your location: ${error.message}`);
-        reject(error);
+        console.error("Geolocation error:", error);
+        // Fallback to default location
+        resolve({
+          lat: DEFAULT_LOCATION.lat,
+          lng: DEFAULT_LOCATION.lng
+        });
       },
       { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
     );

@@ -4,7 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
-import { DEFAULT_LOCATION, getUserLocation, forwardGeocode, reverseGeocode, getRoute } from '../utils/osmUtils';
+import { DEFAULT_LOCATION, getUserLocation, forwardGeocode, reverseGeocode, getRoute, GeocodingResult } from '../utils/osmUtils';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Loader2, MapPin, Navigation, Search } from 'lucide-react';
@@ -33,28 +33,40 @@ const OpenStreetMap: React.FC<OpenStreetMapProps> = ({ height = '500px', classNa
   const [isLoading, setIsLoading] = useState(true);
   const [startAddress, setStartAddress] = useState('');
   const [endAddress, setEndAddress] = useState('');
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<GeocodingResult[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentAddress, setCurrentAddress] = useState('');
+  const [mapInitialized, setMapInitialized] = useState(false);
 
   // Initialize map
   useEffect(() => {
     if (mapContainerRef.current && !mapRef.current) {
+      console.log("Initializing map...");
+      
       // Create map instance
-      mapRef.current = L.map(mapContainerRef.current).setView(
-        [DEFAULT_LOCATION.lat, DEFAULT_LOCATION.lng], 
-        14
-      );
+      mapRef.current = L.map(mapContainerRef.current, {
+        center: [DEFAULT_LOCATION.lat, DEFAULT_LOCATION.lng],
+        zoom: 14,
+        zoomControl: false
+      });
 
       // Add OpenStreetMap tile layer
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(mapRef.current);
-
+      
+      // Add zoom control in a better position
+      L.control.zoom({
+        position: 'bottomright'
+      }).addTo(mapRef.current);
+      
+      setMapInitialized(true);
+      
       // Try to get user location
       getUserLocation()
         .then(coords => {
+          console.log("Got user location:", coords);
           if (mapRef.current) {
             mapRef.current.setView([coords.lat, coords.lng], 16);
             
@@ -86,6 +98,21 @@ const OpenStreetMap: React.FC<OpenStreetMapProps> = ({ height = '500px', classNa
         .catch(error => {
           console.error("Error getting location:", error);
           toast.error("Could not get your location. Using default location.");
+          
+          // Add marker for default location
+          if (mapRef.current) {
+            userMarkerRef.current = L.marker([DEFAULT_LOCATION.lat, DEFAULT_LOCATION.lng], {
+              icon: L.divIcon({
+                className: 'default-location-marker',
+                html: `<div class="w-6 h-6 bg-amber-500 text-white rounded-full shadow-lg flex items-center justify-center">
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+                      </div>`,
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+              })
+            }).addTo(mapRef.current)
+              .bindPopup(`Default location: ${DEFAULT_LOCATION.name}`).openPopup();
+          }
         })
         .finally(() => {
           setIsLoading(false);
@@ -100,6 +127,13 @@ const OpenStreetMap: React.FC<OpenStreetMapProps> = ({ height = '500px', classNa
       }
     };
   }, []);
+
+  // This effect ensures the map resizes properly when it becomes visible
+  useEffect(() => {
+    if (mapRef.current && mapInitialized) {
+      mapRef.current.invalidateSize();
+    }
+  }, [mapInitialized]);
 
   // Function to clear all markers except user location
   const clearMarkers = () => {
@@ -135,7 +169,9 @@ const OpenStreetMap: React.FC<OpenStreetMapProps> = ({ height = '500px', classNa
         // Add markers for all results
         results.forEach(result => {
           if (mapRef.current) {
-            const marker = L.marker([parseFloat(result.lat), parseFloat(result.lon)])
+            const lat = parseFloat(result.lat);
+            const lng = parseFloat(result.lon);
+            const marker = L.marker([lat, lng])
               .addTo(mapRef.current)
               .bindPopup(result.display_name);
             markersRef.current.push(marker);
@@ -144,10 +180,9 @@ const OpenStreetMap: React.FC<OpenStreetMapProps> = ({ height = '500px', classNa
         
         // Center map on first result
         if (mapRef.current) {
-          mapRef.current.setView(
-            [parseFloat(results[0].lat), parseFloat(results[0].lon)], 
-            14
-          );
+          const lat = parseFloat(results[0].lat);
+          const lng = parseFloat(results[0].lon);
+          mapRef.current.setView([lat, lng], 14);
         }
         
         toast.success(`Found ${results.length} locations`);
@@ -186,8 +221,10 @@ const OpenStreetMap: React.FC<OpenStreetMapProps> = ({ height = '500px', classNa
         return;
       }
       
-      const startCoords: [number, number] = [parseFloat(startResults[0].lat), parseFloat(startResults[0].lon)];
-      const endCoords: [number, number] = [parseFloat(endResults[0].lat), parseFloat(endResults[0].lon)];
+      const startLat = parseFloat(startResults[0].lat);
+      const startLng = parseFloat(startResults[0].lon);
+      const endLat = parseFloat(endResults[0].lat);
+      const endLng = parseFloat(endResults[0].lon);
       
       // Clear previous routing
       clearRouting();
@@ -196,8 +233,8 @@ const OpenStreetMap: React.FC<OpenStreetMapProps> = ({ height = '500px', classNa
       if (mapRef.current) {
         routingControlRef.current = L.Routing.control({
           waypoints: [
-            L.latLng(startCoords[0], startCoords[1]),
-            L.latLng(endCoords[0], endCoords[1])
+            L.latLng(startLat, startLng),
+            L.latLng(endLat, endLng)
           ],
           routeWhileDragging: true,
           showAlternatives: true,
@@ -333,7 +370,7 @@ const OpenStreetMap: React.FC<OpenStreetMapProps> = ({ height = '500px', classNa
       <div 
         ref={mapContainerRef} 
         style={{ height, width: '100%' }} 
-        className="rounded-lg border shadow-lg overflow-hidden relative"
+        className="rounded-lg border shadow-lg overflow-hidden relative z-0"
       >
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/50 z-10">
