@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -7,6 +6,7 @@ import { StatusSummary } from "@/components/StatusSummary";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import StoremapperWidget from "@/components/map/StoremapperWidget";
+import EmbeddedGoogleMap from "@/components/map/EmbeddedGoogleMap";
 import { 
   Map, 
   Users, 
@@ -126,14 +126,21 @@ const Index = () => {
           
           <div className="grid gap-6 mb-8">
             {/* Map Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="h-[50vh] w-full rounded-lg border overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="h-[50vh] w-full rounded-lg border overflow-hidden lg:col-span-1">
                 <LiveMap />
               </div>
-              <div className="h-[50vh] w-full rounded-lg border overflow-hidden">
+              <div className="h-[50vh] w-full rounded-lg border overflow-hidden lg:col-span-1">
                 <StoremapperWidget 
                   storeId="31600-r6O0QN9KVJv8bUHG" 
                   className="h-full"
+                />
+              </div>
+              <div className="h-[50vh] w-full rounded-lg border overflow-hidden lg:col-span-1">
+                <EmbeddedGoogleMap 
+                  apiKey="AIzaSyAjVL-75atatWJ010s6UPsXAXjrh_20UMA"
+                  location="Gako+Military+Academy,Rwanda"
+                  zoom={15}
                 />
               </div>
             </div>

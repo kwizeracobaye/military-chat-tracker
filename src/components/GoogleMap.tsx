@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { GoogleMap, Marker } from '@react-google-maps/api';
 import { AlertTriangle } from 'lucide-react';
@@ -29,13 +28,11 @@ export function GoogleMapComponent() {
   const [newObjectiveType, setNewObjectiveType] = useState<ObjectivePoint['type']>('primary');
   const { toast } = useToast();
   
-  // Load the Google Maps script
   const { isLoaded, loadError } = useGoogleMaps();
   
   const onMapLoad = useCallback((map: google.maps.Map) => {
     mapRef.current = map;
     
-    // Apply custom map styles
     map.setOptions({
       styles: [
         {
@@ -59,11 +56,9 @@ export function GoogleMapComponent() {
       fullscreenControl: false,
     });
     
-    // Generate random units around the center
     setUnits(generateRandomUnits(12, center));
   }, [center]);
   
-  // Update units positions periodically to simulate movement
   useEffect(() => {
     if (!units.length) return;
     
@@ -164,7 +159,6 @@ export function GoogleMapComponent() {
     }
   };
   
-  // Handle map zoom level changes from slider
   const handleSliderChange = (value: number[]) => {
     const newZoom = value[0];
     setZoom(newZoom);
@@ -216,7 +210,6 @@ export function GoogleMapComponent() {
           mapTypeId: google.maps.MapTypeId.TERRAIN,
         }}
       >
-        {/* Unit Markers */}
         {units.map((unit) => (
           <Marker
             key={unit.id}
@@ -227,7 +220,6 @@ export function GoogleMapComponent() {
           />
         ))}
         
-        {/* Objective Markers */}
         {objectivePoints.map((objective) => (
           <Marker
             key={objective.id}
@@ -237,14 +229,12 @@ export function GoogleMapComponent() {
           />
         ))}
         
-        {/* Info Window for selected unit */}
         <UnitInfoWindow 
           selectedUnit={selectedUnit} 
           onClose={() => setSelectedUnit(null)}
         />
       </GoogleMap>
       
-      {/* Map Controls */}
       <MapNavigationControls />
       <MapZoomControls 
         zoom={zoom} 
