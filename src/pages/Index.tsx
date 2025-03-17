@@ -6,6 +6,7 @@ import { LiveMap } from "@/components/LiveMap";
 import { StatusSummary } from "@/components/StatusSummary";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import StoremapperWidget from "@/components/map/StoremapperWidget";
 import { 
   Map, 
   Users, 
@@ -124,8 +125,17 @@ const Index = () => {
           </div>
           
           <div className="grid gap-6 mb-8">
-            <div className="h-[50vh] w-full rounded-lg border overflow-hidden">
-              <LiveMap />
+            {/* Map Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="h-[50vh] w-full rounded-lg border overflow-hidden">
+                <LiveMap />
+              </div>
+              <div className="h-[50vh] w-full rounded-lg border overflow-hidden">
+                <StoremapperWidget 
+                  storeId="31600-r6O0QN9KVJv8bUHG" 
+                  className="h-full"
+                />
+              </div>
             </div>
             
             <StatusSummary />
